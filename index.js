@@ -1,12 +1,14 @@
 const express = require('express');
 require('dotenv').config();
 const multer = require('multer');
+const cors = require('cors');
 const { initializeApp } = require("firebase/app");
 const { getStorage, ref, uploadBytes, getDownloadURL,deleteObject } = require("firebase/storage");
 const File = require('./file-upload-schema');
 const Data = require('./text-data');
 const bodyParser = require('body-parser');
 const app = express();
+app.use(cors());
 const port = 3000;
 app.use(bodyParser.json());
 // Your Firebase configuration
