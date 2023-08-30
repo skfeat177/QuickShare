@@ -19,7 +19,6 @@
       <p><strong>Parameters:</strong></p>
       <ul>
         <li>file (multipart form data): The file to be uploaded</li>
-        <li>fileName (query parameter): The desired file name</li>
         <li>description (query parameter): Description of the file</li>
       </ul>
       <p><strong>Response:</strong> JSON response with success or error message</p>
