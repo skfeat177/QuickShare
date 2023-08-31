@@ -1,7 +1,6 @@
 const express = require('express');
 require('dotenv').config();
 const multer = require('multer');
-const { createProxyMiddleware } = require('http-proxy-middleware');
 const cors = require('cors');
 const { initializeApp } = require("firebase/app");
 const { getStorage, ref, uploadBytes, getDownloadURL,deleteObject } = require("firebase/storage");
@@ -12,18 +11,6 @@ const app = express();
 app.use(cors());
 const port = 3000;
 app.use(bodyParser.json());
-const targetServer = 'https://quick-share-cors.vercel.app';
-app.use(
-  '/',
-  createProxyMiddleware({
-    target: targetServer,
-    changeOrigin: true,
-    onProxyReq: (proxyReq, req, res) => {
-      // Set the 'Origin' header to allow requests from any origin
-      proxyReq.setHeader('Origin', '*');
-    },
-  })
-);
 // Your Firebase configuration
 const firebaseConfig = {
   apiKey: process.env.API_KEY,
