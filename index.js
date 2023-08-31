@@ -8,7 +8,9 @@ const File = require('./file-upload-schema');
 const Data = require('./text-data');
 const bodyParser = require('body-parser');
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: ['https://quick-share-react-81ry.vercel.app', 'http://127.0.0.1:3000'],
+}));
 const port = 3000;
 app.use(bodyParser.json());
 // Your Firebase configuration
