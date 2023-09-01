@@ -48,6 +48,21 @@
       <p><strong>Response:</strong> JSON response with file details</p>
     </div>
   </div>
+ <p><strong>Endpoint:</strong> GET /getlimitedfiles</p>
+            <p><strong>Description:</strong> Retrieve a limited number of uploaded files.</p>
+            <p><strong>Parameters:</strong></p>
+            <ul>
+                <li><code>count</code> (query parameter): Number of files to retrieve.</li>
+            </ul>
+            <p><strong>Response:</strong> JSON response with a list of file objects or an error message if no files are found.</p>
+
+            <p><strong>Endpoint:</strong> GET /searchfile</p>
+            <p><strong>Description:</strong> Search for files by their description.</p>
+            <p><strong>Parameters:</strong></p>
+            <ul>
+                <li><code>name</code> (query parameter): Description to search for.</li>
+            </ul>
+            <p><strong>Response:</strong> JSON response with a list of file objects that match the search criteria or an error message if no files are found.</p>
 
   <!-- Delete a File -->
   <div class="card my-4">
@@ -87,6 +102,23 @@
       <p><strong>Response:</strong> JSON response containing details of all data</p>
     </div>
   </div>
+  <p><strong>Endpoint:</strong> GET /getlimiteddata</p>
+            <p><strong>Description:</strong> Retrieve a limited number of data records of a specific type.</p>
+            <p><strong>Parameters:</strong></p>
+            <ul>
+                <li><code>count</code> (query parameter): Number of data records to retrieve.</li>
+                <li><code>type</code> (query parameter): Type of data to retrieve.</li>
+            </ul>
+            <p><strong>Response:</strong> JSON response with a list of data objects or an error message if no data is found.</p>
+
+            <p><strong>Endpoint:</strong> GET /searchdata</p>
+            <p><strong>Description:</strong> Search for data records by type and name.</p>
+            <p><strong>Parameters:</strong></p>
+            <ul>
+                <li><code>type</code> (query parameter): Type of data to search for.</li>
+                <li><code>name</code> (query parameter): Name to search for.</li>
+            </ul>
+            <p><strong>Response:</strong> JSON response with a list of data objects that match the search criteria or an error message if no data is found.</p>
 
   <!-- Get Data by ID -->
   <div class="card my-4">
