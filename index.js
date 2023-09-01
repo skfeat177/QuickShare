@@ -95,6 +95,41 @@ app.get('/getallfiles', async (req, res) => {
     res.status(500).json({ status: 'error', message: 'Internal Server Error' });
   }
 });
+app.get('/getlimitedfiles', async (req, res) => {
+  const dataCount = parseInt(req.query.count);
+
+
+  try {
+    const allFiles = await File.find().limit(dataCount); // Limit the number of documents
+
+    if (allFiles.length > 0) {
+      res.json(allFiles);
+    } else {
+      res.status(404).json({ status: 'error', message: 'No files found' });
+    }
+  } catch (error) {
+    console.error('Error fetching files:', error);
+    res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+  }
+});
+
+app.get('/searchfile', async (req, res) => {
+  const documentName = req.query.name;
+  try {
+    const regex = new RegExp(documentName, 'i'); // 'i' flag for case-insensitive search
+    const allFiles = await File.find({ fileDescription: { $regex: regex } });
+
+    if (allFiles.length > 0) {
+      res.json(allFiles);
+    } else {
+      res.status(404).json({ status: 'error', message: 'No files found' });
+    }
+  } catch (error) {
+    console.error('Error fetching files:', error);
+    res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+  }
+});
+
 
 // GET route for fetching file details
 app.get('/getfiledetail', async (req, res) => {
@@ -166,6 +201,40 @@ app.get('/getalldata', async (req, res) => {
 
     if (allFiles.length > 0) {
       res.json({ status: 'ok', message: 'All files retrieved', files: allFiles });
+    } else {
+      res.status(404).json({ status: 'error', message: 'No files found' });
+    }
+  } catch (error) {
+    console.error('Error fetching all files:', error);
+    res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+  }
+});
+app.get('/getlimiteddata', async (req, res) => {
+  const count = req.query.count
+  const type = req.query.type
+  try {
+    const allFiles = await Data.find({dataType:type}).limit(count);// Retrieve all documents from the File schema
+
+    if (allFiles.length > 0) {
+      res.json(allFiles);
+    } else {
+      res.status(404).json({ status: 'error', message: 'No files found' });
+    }
+  } catch (error) {
+    console.error('Error fetching all files:', error);
+    res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+  }
+});
+
+app.get('/searchdata', async (req, res) => {
+  const dataType = req.query.type
+  const dataName = req.query.name
+  try {
+    const regex = new RegExp(dataName, 'i'); 
+    const allFiles = await Data.find({dataType:dataType,dataName:{ $regex: regex }}); // Retrieve all documents from the File schema
+
+    if (allFiles.length > 0) {
+      res.json(allFiles);
     } else {
       res.status(404).json({ status: 'error', message: 'No files found' });
     }
