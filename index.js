@@ -100,7 +100,7 @@ app.get('/getlimitedfiles', async (req, res) => {
   const page = parseInt(req.query.page) || 1; // Parse page as an integer, default to page 1 if not provided
 
   // Calculate the number of documents to skip based on the page number
-  const skip = (page - 1) * dataCount;
+  const skip = -page * dataCount; // Negate page to reverse the order
 
   try {
     const allFiles = await File.find()
