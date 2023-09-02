@@ -100,11 +100,11 @@ app.get('/getlimitedfiles', async (req, res) => {
   const page = parseInt(req.query.page) || 1; // Parse page as an integer, default to page 1 if not provided
 
   // Calculate the number of documents to skip based on the page number
-  const skip = -page * dataCount; // Negate page to reverse the order
+  const skip = (page - 1) * dataCount;
 
   try {
     const allFiles = await File.find()
-      .sort({ _id: -1 }) // Sort by createdAt field in descending order (most recent first)
+      .sort({ _id: -1 }) // Sort by _id field in descending order (most recent first)
       .skip(skip) // Skip documents based on page and count
       .limit(dataCount); // Limit the number of documents
 
