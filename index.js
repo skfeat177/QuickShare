@@ -96,11 +96,16 @@ app.get('/getallfiles', async (req, res) => {
   }
 });
 app.get('/getlimitedfiles', async (req, res) => {
-  const dataCount = parseInt(req.query.count);
+  const dataCount = parseInt(req.query.count); // Parse count as an integer
+  const page = parseInt(req.query.page) || 1; // Parse page as an integer, default to page 1 if not provided
+
+  // Calculate the number of documents to skip based on the page number
+  const skip = (page - 1) * dataCount;
 
   try {
     const allFiles = await File.find()
       .sort({ createdAt: -1 }) // Sort by createdAt field in descending order (most recent first)
+      .skip(skip) // Skip documents based on page and count
       .limit(dataCount); // Limit the number of documents
 
     if (allFiles.length > 0) {
@@ -113,6 +118,7 @@ app.get('/getlimitedfiles', async (req, res) => {
     res.status(500).json({ status: 'error', message: 'Internal Server Error' });
   }
 });
+
 
 app.get('/searchfile', async (req, res) => {
   const documentName = req.query.name;
@@ -212,12 +218,17 @@ app.get('/getalldata', async (req, res) => {
 });
 app.get('/getlimiteddata', async (req, res) => {
   const count = parseInt(req.query.count); // Parse count as an integer
+  const page = parseInt(req.query.page) || 1; // Parse page as an integer, default to page 1 if not provided
   const type = req.query.type;
 
+  // Calculate the number of documents to skip based on the page number
+  const skip = (page - 1) * count;
+
   try {
-    // Find documents of the specified dataType, sort by _id in descending order (latest first), and limit the results
+    // Find documents of the specified dataType, sort by _id in descending order (latest first), skip the appropriate number of documents, and limit the results
     const allFiles = await Data.find({ dataType: type })
       .sort({ _id: -1 }) // Sort by _id in descending order
+      .skip(skip) // Skip documents based on page and count
       .limit(count);
 
     if (allFiles.length > 0) {
@@ -230,6 +241,7 @@ app.get('/getlimiteddata', async (req, res) => {
     res.status(500).json({ status: 'error', message: 'Internal Server Error' });
   }
 });
+
 
 app.get('/searchdata', async (req, res) => {
   const dataType = req.query.type
