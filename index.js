@@ -104,7 +104,7 @@ app.get('/getlimitedfiles', async (req, res) => {
 
   try {
     const allFiles = await File.find()
-      .sort({ createdAt: -1 }) // Sort by createdAt field in descending order (most recent first)
+      .sort({ _id: -1 }) // Sort by createdAt field in descending order (most recent first)
       .skip(skip) // Skip documents based on page and count
       .limit(dataCount); // Limit the number of documents
 
