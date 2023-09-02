@@ -98,9 +98,10 @@ app.get('/getallfiles', async (req, res) => {
 app.get('/getlimitedfiles', async (req, res) => {
   const dataCount = parseInt(req.query.count);
 
-
   try {
-    const allFiles = await File.find().limit(dataCount); // Limit the number of documents
+    const allFiles = await File.find()
+      .sort({ createdAt: -1 }) // Sort by createdAt field in descending order (most recent first)
+      .limit(dataCount); // Limit the number of documents
 
     if (allFiles.length > 0) {
       res.json(allFiles);
@@ -210,10 +211,14 @@ app.get('/getalldata', async (req, res) => {
   }
 });
 app.get('/getlimiteddata', async (req, res) => {
-  const count = req.query.count
-  const type = req.query.type
+  const count = parseInt(req.query.count); // Parse count as an integer
+  const type = req.query.type;
+
   try {
-    const allFiles = await Data.find({dataType:type}).limit(count);// Retrieve all documents from the File schema
+    // Find documents of the specified dataType, sort by _id in descending order (latest first), and limit the results
+    const allFiles = await Data.find({ dataType: type })
+      .sort({ _id: -1 }) // Sort by _id in descending order
+      .limit(count);
 
     if (allFiles.length > 0) {
       res.json(allFiles);
@@ -221,7 +226,7 @@ app.get('/getlimiteddata', async (req, res) => {
       res.status(404).json({ status: 'error', message: 'No files found' });
     }
   } catch (error) {
-    console.error('Error fetching all files:', error);
+    console.error('Error fetching limited data:', error);
     res.status(500).json({ status: 'error', message: 'Internal Server Error' });
   }
 });
