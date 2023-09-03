@@ -27,7 +27,52 @@ const firebaseApp = initializeApp(firebaseConfig);
 const storage = multer.memoryStorage(); // Store file in memory
 
 const upload = multer({ storage: storage });
+const http = require('http'); // Import the built-in http module
 
+app.post('/uploadlink', (req, res) => {
+  const downloadLink = req.body.link; // Assuming you send the download link in the request body
+
+  if (!downloadLink) {
+    return res.status(400).json({ message: "Download Link Missing" });
+  }
+
+  // Create an HTTP GET request to the download link
+  const request = http.get(downloadLink, (response) => {
+    if (response.statusCode !== 200) {
+      return res.status(400).json({ message: "Failed to fetch the file from the download link" });
+    }
+
+    // Set up Firebase Storage references
+    const storage = getStorage(firebaseApp);
+    const fileName = 'uploadlink-' + Date.now(); // Define a unique file name
+    const storageRef = ref(storage, fileName);
+    const fileUploadStream = uploadBytesResumable(storageRef, {
+      contentType: response.headers['content-type'], // Set content type based on response
+    });
+
+    // Pipe the response from the download link to Firebase Storage
+    response.pipe(fileUploadStream);
+
+    fileUploadStream.on('state_changed', (snapshot) => {
+      // Handle upload progress here if needed
+    }, (error) => {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }, async () => {
+      // Upload completed successfully, get the download URL
+      const fileUrl = await getDownloadURL(storageRef);
+
+      // You can save file metadata or perform any other necessary actions here
+
+      res.json({ message: "File Uploaded Successfully", fileUrl });
+    });
+  });
+
+  request.on('error', (error) => {
+    console.error(error);
+    res.status(400).json({ message: "Failed to fetch the file from the download link" });
+  });
+});
 app.post('/upload', upload.single('file'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: "File Upload Unsuccessful" });
